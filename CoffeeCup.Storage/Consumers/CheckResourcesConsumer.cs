@@ -15,15 +15,3 @@ public class CheckResourcesConsumer : IConsumer<CheckResources>
         await context.RespondAsync(new ResourcesReport(context.Message.CorrelationId, result));
     }
 }
-
-public class CheckResourcesFaultConsumer : IConsumer<Fault<CheckResources>>
-{
-    private readonly ILogger<CheckResourcesFaultConsumer> _logger;
-
-    public CheckResourcesFaultConsumer(ILogger<CheckResourcesFaultConsumer> logger) { _logger = logger; }
-    public Task Consume(ConsumeContext<Fault<CheckResources>> context)
-    {
-        _logger.LogError("{@Message}", context.Message);
-        return Task.CompletedTask;
-    }
-}

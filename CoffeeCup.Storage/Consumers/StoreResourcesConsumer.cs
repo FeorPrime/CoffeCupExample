@@ -18,18 +18,26 @@ public class StoreResourcesConsumer : IConsumer<StoreResources>
     
     public async Task Consume(ConsumeContext<StoreResources> context)
     {
-        await _validator.ValidateAndThrowAsync(context.Message.ResourceDto, context.CancellationToken);
+        await _validator.ValidateAndThrowAsync(context.Message.ResourceDto);
         await _storageService.StoreResourcesAsync(context.Message.ResourceDto, context.CancellationToken);
+        await context.RespondAsync(context.Message);
     }
 }
 
-public class StoreResourcesFaultConsumer : IConsumer<Fault<StoreResources>>
+public class StoreResourcesErrorConsumer : IConsumer<Fault<StoreResources>>
 {
-    private readonly ILogger<StoreResourcesFaultConsumer> _logger;
-    public StoreResourcesFaultConsumer(ILogger<StoreResourcesFaultConsumer> logger) { _logger = logger; }
+    private readonly ILogger<StoreResourcesErrorConsumer> _logger;
+
+    public StoreResourcesErrorConsumer(ILogger<StoreResourcesErrorConsumer> logger)
+    {
+        _logger = logger;
+    }
     public Task Consume(ConsumeContext<Fault<StoreResources>> context)
     {
-        _logger.LogError("{@Message}", context.Message);
+        var fault = context.Message;
+        _logger.LogError("Fault received for message {MessageId}: {Reason}", context.MessageId,
+            string.Join(", ", fault.Exceptions.Select(e => e.Message)));
+        
         return Task.CompletedTask;
     }
 }

@@ -46,10 +46,10 @@ public class StorageController : ControllerBase
     [HttpPost(ApiEndpoints.Storage.StoreResources)]
     [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
-    public async Task<IActionResult> StoreResourcesAsync([FromBody] ResourcesDto request, 
+    public async Task<IActionResult> StoreResourcesAsync([FromServices] IRequestClient<StoreResources> client,[FromBody] ResourcesDto request, 
         CancellationToken cancellationToken)
     {
-        await _publishEndpoint.Publish(new StoreResources(Guid.NewGuid(), request), cancellationToken); 
+        await client.GetResponse<StoreResources>(new StoreResources(Guid.NewGuid(), request), cancellationToken); 
         return Accepted();
     }
 }

@@ -15,15 +15,3 @@ public class TakeResourcesConsumer : IConsumer<TakeResources>
         await context.RespondAsync(context.Message with { Result = result });
     }
 }
-
-public class TakeResourcesFaultConsumer : IConsumer<Fault<TakeResources>>
-{
-    private readonly ILogger<TakeResourcesFaultConsumer> _logger;
-
-    public TakeResourcesFaultConsumer(ILogger<TakeResourcesFaultConsumer> logger) { _logger = logger; }
-    public Task Consume(ConsumeContext<Fault<TakeResources>> context)
-    {
-        _logger.LogError("{@Message}", context.Message);
-        return Task.CompletedTask;
-    }
-}

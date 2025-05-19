@@ -14,15 +14,3 @@ public class PruneResourcesConsumer : IConsumer<PruneResources>
         await _storageService.PruneResourcesAsync(context.CancellationToken);
     }
 }
-
-public class PruneResourcesFaultConsumer : IConsumer<Fault<PruneResources>>
-{
-    private readonly ILogger<PruneResourcesFaultConsumer> _logger;
-
-    public PruneResourcesFaultConsumer(ILogger<PruneResourcesFaultConsumer> logger) { _logger = logger; }
-    public Task Consume(ConsumeContext<Fault<PruneResources>> context)
-    {
-        _logger.LogError("{@Message}", context.Message);
-        return Task.CompletedTask;
-    }
-}
