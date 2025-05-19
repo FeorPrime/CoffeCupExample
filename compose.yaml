@@ -1,0 +1,23 @@
+﻿services:
+
+# Infrastructure
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: coffeetestuser
+      POSTGRES_PASSWORD: coffeetestpass
+      POSTGRES_DB: coffeedb
+    ports:
+      - "5432:5432"
+  
+  transport:
+      image: rabbitmq:3-management
+      environment:
+        RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+        RABBITMQ_DEFAULT_USER: "admin"
+        RABBITMQ_DEFAULT_PASS: "password"
+        RABBITMQ_DEFAULT_VHOST: "/"
+      ports:
+        - "5672:5672"
+        - "15672:15672"
