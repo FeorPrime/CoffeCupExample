@@ -27,27 +27,19 @@ public class TheEventController: ControllerBase
     }
     
     [HttpGet("send10")]
-    public async Task<IActionResult> Send10([FromServices] ISendEndpoint bus, [FromServices] LoadBalancer lb)
+    public async Task<IActionResult> Send10([FromServices] IBus bus, [FromServices] LoadBalancer lb)
     {
         for (int i = 0; i < 10; i++)
         {
-            //var route = lb.GetQueueByRoundRobin();
-            var route = lb.GetRouteKeyByRoundRobin().ToUpper();
+            var route = lb.GetQueueByRoundRobin();
             
             var payload = new TheEvent(Guid.NewGuid(), route);
             
             Thread.Sleep(100);
             
-            // var ep = await bus.GetSendEndpoint(new Uri($"queue:{route}"));
-            // await ep.Send(payload, s =>
-            // {
-            //     s.SetRoutingKey("A");
-            // });
-
-            await bus.Send(payload, s =>
-            {
-                s.SetRoutingKey($"{route}");
-            });
+            var ep = await bus.GetSendEndpoint(new Uri($"queue:{route}"));
+            
+            await ep.Send(payload);
         }
 
         return Accepted();

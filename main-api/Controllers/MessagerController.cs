@@ -55,4 +55,28 @@ public class MessagerController: ControllerBase
         var reports = await ctx.WorkReports.AsNoTracking().Take(100).ToListAsync();
         return Ok(reports);
     }
+
+    [HttpGet("/send10")]
+    public async Task<IActionResult> Send10([FromServices]IBus bus)
+    {
+        const string sendA = "queue:machine-events-alpha";
+        const string sendB = "queue:machine-events-beta";
+        var uriA = new Uri(sendA);
+        var uriB = new Uri(sendB);
+        
+        var state = false;
+
+        for (var i = 0; i < 10; i++)
+        {
+            var payload = new StartMachine(Guid.NewGuid(), state ? sendA : sendB);
+            var ep = await bus.GetSendEndpoint(state ? uriA : uriB);
+            await ep.Send(payload, s =>
+            {
+                s.SetRoutingKey(state ? "machine-events-alpha" : "machine-events-beta");
+            });
+            state = !state;
+        }
+
+        return Accepted();
+    }
 }

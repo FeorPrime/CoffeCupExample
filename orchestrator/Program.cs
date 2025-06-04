@@ -40,11 +40,12 @@ builder.Services.AddMassTransit(x =>
             //r.AddDbContext<DbContext, ExpContext>();
             r.ExistingDbContext<ExpContext>();
             r.UsePostgres();
-        }).Endpoint(e=>
-        {
-            e.Name = $"machine-events-{orchestratorQueue}";
-        })
-        .ExcludeFromConfigureEndpoints();
+        });
+    //.Endpoint(e=>
+    //    {
+      //      e.Name = $"machine-events-{orchestratorQueue}";
+       // });
+        //.ExcludeFromConfigureEndpoints();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -98,7 +99,7 @@ public class RegistrationStateDefinition :
     protected override void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator,
         ISagaConfigurator<TestStateMachineState> consumerConfigurator, IRegistrationContext context)
     {
-        endpointConfigurator.UseMessageRetry(r => r.Intervals(100, 500, 1000, 1000, 1000, 1000, 1000));
+       // endpointConfigurator.UseMessageRetry(r => r.Intervals(100, 500, 1000, 1000, 1000, 1000, 1000));
         
         endpointConfigurator.UseEntityFrameworkOutbox<ExpContext>(context);
         // endpointConfigurator.ConfigureSaga<TestStateMachineState>(s =>
