@@ -22,8 +22,8 @@ public class WorkConsumer : IConsumer<Work>
         Console.WriteLine("CorrId = " + context.Message.CorrId);
         Console.WriteLine("Payload CorrId = " + context.Message.Payload.CorrId);
         Console.WriteLine("Payload Route = " + context.Message.Payload.Route);
-        Console.WriteLine("Where Started = " + context.Message.Payload.WhereStarted);
-        Console.WriteLine("Where Finished = " + context.Message.Payload.WhereFinished);
+        Console.WriteLine("Where Started = " + context.Message.Payload.WhenStarted);
+        Console.WriteLine("Where Finished = " + context.Message.Payload.WhenFinished);
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("----------------------------");
         Console.ResetColor();
@@ -32,7 +32,7 @@ public class WorkConsumer : IConsumer<Work>
         {
             CorrId = context.Message.CorrId,
             Route = context.Message.Payload.Route,
-            WhereStarted = context.Message.Payload.WhereStarted.ToString(CultureInfo.CurrentCulture),
+            WhereStarted = context.Message.Payload.WhenStarted.ToString(CultureInfo.CurrentCulture),
             WhereFinished = DateTime.UtcNow.ToString(CultureInfo.CurrentCulture)//context.Message.Payload.WhereFinished.ToString(CultureInfo.CurrentCulture),
         });
         

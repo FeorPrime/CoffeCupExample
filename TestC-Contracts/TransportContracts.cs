@@ -11,6 +11,6 @@ public class WorkPayload
     public Guid CorrId { get; set; }
     
     public string Route { get; set; }
-    public DateTime WhereStarted { get; set; }
-    public DateTime WhereFinished { get; set; }
+    public DateTime WhenStarted { get; set; }
+    public DateTime WhenFinished { get; set; }
 }

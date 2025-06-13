@@ -23,15 +23,18 @@ public class StateMachineTestC : MassTransitStateMachine<StateMachineTestCState>
             When(Starting)
                 .Then(s =>
                 {
-                    
+                    s.Saga.StartStamp = DateTime.UtcNow;
+                    s.Saga.Route = s.Message.Route;
                 })
                 .Publish(ctx => new Work(ctx.Message.CorrId,
                     new WorkPayload
                     {
                         CorrId = ctx.Message.CorrId,
                         Route = ctx.Message.Route,
-                        WhereStarted = DateTime.UtcNow
+                        WhenStarted = DateTime.UtcNow
                     })));
+        
+        During(Working, When());
     }
 
     public State InProgress { get; } = null!;
